@@ -67,6 +67,42 @@ const LokatyForm = ({
         </select>
       </div>
 
+      <div>
+        <label htmlFor="rRate" className="text-sm">
+          Stopa procentowa
+        </label>
+        <select
+          id="rRate"
+          {...register("rRate", { required: true })}
+          className="select select-bordered w-full mt-2"
+        >
+          <option defaultChecked value={"yearly"}>
+            Roczna
+          </option>
+          <option value={"halfYearly"}>Półroczna</option>
+          <option value={"quarterly"}>Kwartalna</option>
+          <option value={"monthly"}>Miesięczna</option>
+        </select>
+      </div>
+
+      {option !== "r" && (
+        <div>
+          <label htmlFor="r" className="text-sm">
+            Stopa procentowa
+          </label>
+          <input
+            id="r"
+            className={`input input-bordered w-full `}
+            type="number"
+            placeholder="r [%]"
+            {...register("r", { required: true })}
+          />
+          {errors.r && (
+            <span className="text-warning">This field is required</span>
+          )}
+        </div>
+      )}
+
       {option !== "K0" && (
         <div>
           <label htmlFor="K0" className="text-sm">
@@ -100,44 +136,6 @@ const LokatyForm = ({
           {errors.Kn && (
             <span className="text-warning">This field is required</span>
           )}
-        </div>
-      )}
-
-      {option !== "r" && (
-        <div>
-          <label htmlFor="r" className="text-sm">
-            Stopa procentowa
-          </label>
-          <input
-            id="r"
-            className={`input input-bordered w-full `}
-            type="number"
-            placeholder="r [%]"
-            {...register("r", { required: true })}
-          />
-          {errors.r && (
-            <span className="text-warning">This field is required</span>
-          )}
-        </div>
-      )}
-
-      {option !== "r" && (
-        <div>
-          <label htmlFor="rRate" className="text-sm">
-            Stopa procentowa
-          </label>
-          <select
-            id="rRate"
-            {...register("rRate", { required: true })}
-            className="select select-bordered w-full mt-2"
-          >
-            <option defaultChecked value={"yearly"}>
-              Roczna
-            </option>
-            <option value={"halfYearly"}>Półroczna</option>
-            <option value={"quarterly"}>Kwartalna</option>
-            <option value={"monthly"}>Miesięczna</option>
-          </select>
         </div>
       )}
 

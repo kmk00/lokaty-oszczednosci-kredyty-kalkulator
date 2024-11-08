@@ -85,6 +85,7 @@ const calculateKn = (
 
   // Model 4
   KnAnswers.m4 = Number((K0 * Math.E ** (n * rNum)).toFixed(2));
+  console.log(m);
 
   return KnAnswers;
 };
@@ -122,6 +123,7 @@ const calculateK0 = (
   if (m !== null)
     KnAnswers.m3 = Number((Kn / (1 + rNum / m) ** (n * m)).toFixed(2));
   else KnAnswers.m3 = null;
+  console.log(m);
 
   // Model 4
   KnAnswers.m4 = Number((Kn / Math.E ** (n * rNum)).toFixed(2));
@@ -143,7 +145,31 @@ const calculateR = (
   capitalization: timePeriod,
   rRate: timePeriod
 ): ModelsAnswers => {
-  return { m1: 0, m2: 0, m3: 0, m4: 0 };
+  const KnAnswers: ModelsAnswers = {
+    m1: 0,
+    m2: 0,
+    m3: 0,
+    m4: 0,
+  };
+
+  // Model 1
+  KnAnswers.m1 = Number((Kn / K0 / n - 1 / n).toFixed(2)) * 100;
+
+  // Model 2
+  KnAnswers.m2 = Number((Math.log(Kn / K0) / Math.log(1 + n)).toFixed(2)) * 100;
+
+  // Model 3
+  const m = calculateM(capitalization, rRate);
+  if (m !== null)
+    KnAnswers.m3 =
+      Number((m * (Math.pow(Kn / K0, 1 / (n * m)) - 1)).toFixed(2)) * 100;
+  else KnAnswers.m3 = null;
+
+  // Model 4
+  KnAnswers.m4 =
+    Number((Math.log(Kn / K0) / (Math.log(Math.E) * n)).toFixed(2)) * 100;
+
+  return KnAnswers;
 };
 
 /**
@@ -160,7 +186,36 @@ const calculateN = (
   capitalization: timePeriod,
   rRate: timePeriod
 ): ModelsAnswers => {
-  return { m1: 0, m2: 0, m3: 0, m4: 0 };
+  const KnAnswers: ModelsAnswers = {
+    m1: 0,
+    m2: 0,
+    m3: 0,
+    m4: 0,
+  };
+
+  const rNum = r / 100;
+
+  // Model 1
+  KnAnswers.m1 = Number((Kn / K0 / rNum - 1 / rNum).toFixed(2));
+
+  //Model 2
+  KnAnswers.m2 = Number((Math.log(Kn / K0) / Math.log(1 + rNum)).toFixed(2));
+
+  //Model 3
+  const m = calculateM(capitalization, rRate);
+  console.log(m);
+  if (m !== null)
+    KnAnswers.m3 = Number(
+      (Math.log(Kn / K0) / (Math.log(1 + rNum / m) * m)).toFixed(2)
+    );
+  else KnAnswers.m3 = null;
+
+  //Model 4
+  KnAnswers.m4 = Number(
+    (Math.log(Kn / K0) / (Math.log(Math.E) * rNum)).toFixed(2)
+  );
+
+  return KnAnswers;
 };
 
 const calculateM = (
