@@ -1,23 +1,17 @@
 import { useForm } from "react-hook-form";
-import { LokatyInputs, LokatyOptions } from "../../vite-env";
-import { useState } from "react";
+import { LokatyInputs, LokatyOptions, ModelsAnswers } from "../../vite-env";
+import { calculateLokaty } from "../../lib/lokaty";
+import { useEffect } from "react";
 
 const LokatyForm = ({
   setAnswer,
+  handleOptionChange,
+  option,
 }: {
-  setAnswer: React.Dispatch<React.SetStateAction<number | null>>;
+  setAnswer: React.Dispatch<React.SetStateAction<ModelsAnswers | null>>;
+  handleOptionChange: React.ChangeEventHandler<HTMLSelectElement>;
+  option: LokatyOptions;
 }) => {
-  const [option, setOption] = useState<LokatyOptions | null>("Kn");
-
-  const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    if (value === "") {
-      setOption(null);
-    } else {
-      setOption(value as LokatyOptions);
-    }
-  };
-
   const {
     register,
     handleSubmit,
@@ -26,14 +20,20 @@ const LokatyForm = ({
 
   const onSubmit = (data: LokatyInputs) => {
     if (option === undefined) return;
-    console.log(option, data);
+
+    const answer = calculateLokaty(option, data);
+    setAnswer(answer);
   };
+
+  useEffect(() => {
+    setAnswer(null);
+  }, [option]);
 
   return (
     <form className="w-full mt-2 grid gap-2">
       <div className="mt-2">
-        <label htmlFor="option" className="text-[10px]">
-          Wybierz opcię do obliczenia
+        <label htmlFor="option" className="text-sm">
+          Do obliczenia
         </label>
         <select
           id="option"
@@ -49,67 +49,114 @@ const LokatyForm = ({
         </select>
       </div>
 
-      <div className={`${option === "K0" && "hidden"}`}>
-        <label htmlFor="K0" className="text-[10px]">
-          Kapitał początkowy
+      <div className="mt-6">
+        <label htmlFor="kapitalization" className="text-sm">
+          Okres kapitalizacji
         </label>
-        <input
-          id="K0"
-          className="input input-bordered w-full"
-          type="number"
-          placeholder="K0"
-          {...register("K0", { required: option !== "K0" })}
-        />
-        {errors.K0 && (
-          <span className="text-warning">This field is required</span>
-        )}
+        <select
+          id="kapitalization"
+          className="select select-bordered w-full mt-2"
+          {...register("capitalization", { required: true })}
+        >
+          <option defaultChecked value={"yearly"}>
+            Roczny
+          </option>
+          <option value={"halfYearly"}>Półroczny</option>
+          <option value={"quarterly"}>Kwartalny</option>
+          <option value={"monthly"}>Miesięczny</option>
+        </select>
       </div>
 
-      <div className={`${option === "Kn" && "hidden"}`}>
-        <label htmlFor="Kn" className="text-[10px]">
-          Kapitał końcowy
-        </label>
-        <input
-          id="Kn"
-          className={`input input-bordered w-full`}
-          type="number"
-          placeholder="Kn"
-          {...register("Kn", { required: option !== "Kn" })}
-        />
-        {errors.Kn && (
-          <span className="text-warning">This field is required</span>
-        )}
-      </div>
+      {option !== "K0" && (
+        <div>
+          <label htmlFor="K0" className="text-sm">
+            Kapitał początkowy
+          </label>
+          <input
+            id="K0"
+            className="input input-bordered w-full"
+            type="number"
+            placeholder="K0"
+            {...register("K0", { required: true })}
+          />
+          {errors.K0 && (
+            <span className="text-warning">This field is required</span>
+          )}
+        </div>
+      )}
 
-      <div className={`${option === "r" && "hidden"}`}>
-        <label htmlFor="r" className="text-[10px]">
-          Stopa procentowa
-        </label>
-        <input
-          className={`input input-bordered w-full `}
-          type="number"
-          placeholder="r"
-          {...register("r", { required: option !== "r" })}
-        />
-        {errors.r && (
-          <span className="text-warning">This field is required</span>
-        )}
-      </div>
+      {option !== "Kn" && (
+        <div>
+          <label htmlFor="Kn" className="text-sm">
+            Kapitał końcowy
+          </label>
+          <input
+            id="Kn"
+            className={`input input-bordered w-full`}
+            type="number"
+            placeholder="Kn"
+            {...register("Kn", { required: true })}
+          />
+          {errors.Kn && (
+            <span className="text-warning">This field is required</span>
+          )}
+        </div>
+      )}
 
-      <div className={`${option === "n" && "hidden"}`}>
-        <label htmlFor="n" className="text-[10px]">
-          Okres obliczeniowy
-        </label>
-        <input
-          className={`input input-bordered w-full `}
-          type="number"
-          placeholder="n"
-          {...register("n", { required: option !== "n" })}
-        />
-        {errors.n && (
-          <span className="text-warning">This field is required</span>
-        )}
-      </div>
+      {option !== "r" && (
+        <div>
+          <label htmlFor="r" className="text-sm">
+            Stopa procentowa
+          </label>
+          <input
+            id="r"
+            className={`input input-bordered w-full `}
+            type="number"
+            placeholder="r [%]"
+            {...register("r", { required: true })}
+          />
+          {errors.r && (
+            <span className="text-warning">This field is required</span>
+          )}
+        </div>
+      )}
+
+      {option !== "r" && (
+        <div>
+          <label htmlFor="rRate" className="text-sm">
+            Stopa procentowa
+          </label>
+          <select
+            id="rRate"
+            {...register("rRate", { required: true })}
+            className="select select-bordered w-full mt-2"
+          >
+            <option defaultChecked value={"yearly"}>
+              Roczna
+            </option>
+            <option value={"halfYearly"}>Półroczna</option>
+            <option value={"quarterly"}>Kwartalna</option>
+            <option value={"monthly"}>Miesięczna</option>
+          </select>
+        </div>
+      )}
+
+      {option !== "n" && (
+        <div>
+          <label htmlFor="n" className="text-sm">
+            Okres obliczeniowy
+          </label>
+          <input
+            className={`input input-bordered w-full `}
+            type="number"
+            placeholder="n"
+            {...register("n", { required: true })}
+          />
+          {errors.n && (
+            <span className="text-warning">This field is required</span>
+          )}
+        </div>
+      )}
 
       <button
         className="btn btn-primary w-full mt-4"
