@@ -4,7 +4,7 @@ import { IconamoonHomeLight } from "./UI/IconamoonHomeLight";
 const Navigation = () => {
   return (
     <nav className="grid place-items-center mt-2">
-      <Link to="/">
+      <Link className="hover:scale-105 transition-transform duration-75" to="/">
         <IconamoonHomeLight />
       </Link>
       <div className="flex gap-2 mt-2">
