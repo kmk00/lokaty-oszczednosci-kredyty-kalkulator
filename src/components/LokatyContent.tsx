@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LokatyForm from "./forms/LokatyForm";
 import { LokatyOptions, ModelsAnswers } from "../vite-env";
-import LokatyAnswers from "./answers/lokatyAnswers";
+import LokatyAnswers from "./answers/LokatyAnswers";
 
 const LokatyContent = () => {
   const [answer, setAnswer] = useState<ModelsAnswers | null>(null);
