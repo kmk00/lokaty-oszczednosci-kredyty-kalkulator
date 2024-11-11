@@ -14,12 +14,12 @@ const LokatyContent = () => {
 
   return (
     <div className="w-full px-2">
+      {answer && <LokatyAnswers option={option} answers={answer} />}
       <LokatyForm
         setAnswer={setAnswer}
         handleOptionChange={handleOptionChange}
         option={option}
       />
-      {answer && <LokatyAnswers option={option} answers={answer} />}
     </div>
   );
 };

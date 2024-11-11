@@ -30,7 +30,7 @@ const LokatyForm = ({
   }, [option]);
 
   return (
-    <form className="w-full mt-2 grid gap-2">
+    <form className="w-full mt-2 mb-4 grid gap-2">
       <div className="mt-2">
         <label htmlFor="option" className="text-sm">
           Do obliczenia
