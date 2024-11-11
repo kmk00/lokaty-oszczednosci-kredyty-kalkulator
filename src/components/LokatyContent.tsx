@@ -14,7 +14,6 @@ const LokatyContent = () => {
 
   return (
     <div className="w-full px-2">
-      <h1 className="text-center text-xl">Lokaty</h1>
       <LokatyForm
         setAnswer={setAnswer}
         handleOptionChange={handleOptionChange}
