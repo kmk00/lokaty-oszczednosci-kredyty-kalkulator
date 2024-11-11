@@ -1,4 +1,4 @@
-import { NModel1, NModel2, NModel3, NModel4 } from "../../../lib/lokaty2";
+import { NModel1, NModel2, NModel3, NModel4 } from "../../../lib/lokaty";
 
 describe("Test model #1", () => {
   const model1 = new NModel1();

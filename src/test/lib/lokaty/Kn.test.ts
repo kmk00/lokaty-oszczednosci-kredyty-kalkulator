@@ -1,4 +1,4 @@
-import { KnModel1, KnModel2, KnModel3, KnModel4 } from "../../../lib/lokaty2";
+import { KnModel1, KnModel2, KnModel3, KnModel4 } from "../../../lib/lokaty";
 
 describe("Test model #1", () => {
   const model1 = new KnModel1();

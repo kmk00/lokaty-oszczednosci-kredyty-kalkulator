@@ -1,4 +1,4 @@
-import { LokatyParamsBuilder } from "../../../lib/lokaty2";
+import { LokatyParamsBuilder } from "../../../lib/lokaty";
 
 describe("Test lokaty params builder", () => {
   it("should build params", () => {

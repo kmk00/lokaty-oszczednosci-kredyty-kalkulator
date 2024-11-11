@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { LokatyInputs, LokatyOptions, ModelsAnswers } from "../../vite-env";
-import { calculateLokaty } from "../../lib/lokaty";
+import { calculateLokaty } from "../../lib/lokaty.ts";
 import { useEffect } from "react";
 
 const LokatyForm = ({

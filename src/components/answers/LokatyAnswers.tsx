@@ -23,7 +23,7 @@ const LokatyAnswers = ({
   };
 
   return (
-    <div className="w-full p-4 rounded-md border input-bordered mt-4">
+    <div className="w-full p-4 rounded-md border input-bordered my-4">
       <h1 className="text-xl mb-2 text-center">{title()}</h1>
       <p>Oprocentowanie proste: {answers.m1}</p>
       <p>Oprocentowanie złożone: {answers.m2}</p>

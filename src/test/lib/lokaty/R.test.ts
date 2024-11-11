@@ -1,4 +1,4 @@
-import { RModel1, RModel2, RModel3, RModel4 } from "../../../lib/lokaty2";
+import { RModel1, RModel2, RModel3, RModel4 } from "../../../lib/lokaty";
 
 describe("Test model #1", () => {
   const model1 = new RModel1();
