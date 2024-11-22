@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { LokatyOptions, ModelsAnswers, OszczednosciOptions } from "../vite-env";
+import { OszczednosciOptions } from "../vite-env";
 import OszczednosciForm from "./forms/OszczednosciForm";
+import OszczednosciAnswers from "./answers/OszczednosciAnswers";
 
 const OszczednosciContent = () => {
   const [answer, setAnswer] = useState<number | null>(null);
@@ -13,7 +14,7 @@ const OszczednosciContent = () => {
 
   return (
     <div className="w-full px-2">
-      {/* {answer && <LokatyAnswers option={option} answers={answer} />} */}
+      {answer && <OszczednosciAnswers option={option} answers={answer} />}
       <OszczednosciForm
         setAnswer={setAnswer}
         handleOptionChange={handleOptionChange}

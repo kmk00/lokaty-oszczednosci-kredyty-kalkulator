@@ -1,10 +1,11 @@
-import {
-  EFrom,
-  ModelsAnswers,
-  OszczednosciInputs,
-  OszczednosciOptions,
-  timePeriod,
-} from "../vite-env";
+import { EFrom, OszczednosciInputs, OszczednosciOptions } from "../vite-env";
+
+enum timePeriodsEnum {
+  monthly,
+  quarterly,
+  halfYearly,
+  yearly,
+}
 
 interface OszczednosciCalculationStrategy {
   calculate(params: OszczednosciParams): number;
@@ -32,9 +33,9 @@ class KnModel1Up implements OszczednosciCalculationStrategy {
     if (!E || !n || !r) throw new Error("Invalid params");
 
     const q = 1 + r;
-    const answer = (E * q * (q ** n - 1)) / (q - 1);
+    const Kn = (E * q * (q ** n - 1)) / (q - 1);
 
-    return Number(answer.toFixed(2));
+    return Number(Kn.toFixed(2));
   }
 }
 
@@ -44,59 +45,284 @@ class KnModel1Down implements OszczednosciCalculationStrategy {
     if (!E || !n || !r) throw new Error("Invalid params");
 
     const q = 1 + r;
-    const answer = (E * (q ** n - 1)) / (q - 1);
+    const Kn = (E * (q ** n - 1)) / (q - 1);
 
-    return Number(answer.toFixed(2));
+    return Number(Kn.toFixed(2));
   }
 }
 
-// class KnModel2Up implements OszczednosciCalculationStrategy {
-//   calculate(params: OszczednosciParams) {
-//     const { E, n, r } = params;
-//     console.log(E, n, r);
-//     return Number(2).toFixed(2);
-//   }
-// }
+class KnModel2Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, n, r, m } = params;
+    if (!E || !n || !r || !m) throw new Error("Invalid params");
 
-// class KnModel2Down implements OszczednosciCalculationStrategy {
-//   calculate(params: OszczednosciParams) {
-//     const { E, n, r } = params;
-//     console.log(E, n, r);
-//     return Number(2).toFixed(2);
-//   }
-// }
+    const q = 1 + (1 + r / m) ** m - 1;
+    const Kn = (E * q * (q ** n - 1)) / (q - 1);
 
-// class KnModel3Up implements OszczednosciCalculationStrategy {
-//   calculate(params: OszczednosciParams) {
-//     const { E, n, r } = params;
-//     console.log(E, n, r);
-//     return Number(2).toFixed(2);
-//   }
-// }
+    return Number(Kn.toFixed(2));
+  }
+}
 
-// class KnModel3Down implements OszczednosciCalculationStrategy {
-//   calculate(params: OszczednosciParams) {
-//     const { E, n, r } = params;
-//     console.log(E, n, r);
-//     return Number(2).toFixed(2);
-//   }
-// }
+class KnModel2Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, n, r, m } = params;
+    if (!E || !n || !r || !m) throw new Error("Invalid params");
 
-// class KnModel4Up implements OszczednosciCalculationStrategy {
-//   calculate(params: OszczednosciParams) {
-//     const { E, n, r } = params;
-//     console.log(E, n, r);
-//     return Number(2).toFixed(2);
-//   }
-// }
+    const q = 1 + (1 + r / m) ** m - 1;
 
-// class KnModel4Down implements OszczednosciCalculationStrategy {
-//   calculate(params: OszczednosciParams) {
-//     const { E, n, r } = params;
-//     console.log(E, n, r);
-//     return Number(2).toFixed(2);
-//   }
-// }
+    const Kn = (E * (q ** n - 1)) / (q - 1);
+
+    return Number(Kn.toFixed(2));
+  }
+}
+
+class KnModel3Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, n, r, m } = params;
+    if (!E || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r / m;
+    const Kn = (E * q * (q ** (n * m) - 1)) / (q - 1);
+
+    return Number(Kn.toFixed(2));
+  }
+}
+
+class KnModel3Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, n, r, m } = params;
+    if (!E || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r / m;
+    const Kn = (E * (q ** (n * m) - 1)) / (q - 1);
+
+    return Number(Kn.toFixed(2));
+  }
+}
+
+class KnModel4Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, n, r, m } = params;
+    if (!E || !n || !r || !m) throw new Error("Invalid params");
+    const q = 1 + r;
+
+    const Kn = (E * (m + ((m + 1) / 2) * r) * (q ** (n * m) - 1)) / (q - 1);
+
+    return Number(Kn.toFixed(2));
+  }
+}
+
+class KnModel4Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, n, r, m } = params;
+    if (!E || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const Kn = (E * (m + ((m - 1) / 2) * r) * (q ** (n * m) - 1)) / (q - 1);
+
+    return Number(Kn.toFixed(2));
+  }
+}
+
+// -----------
+
+class NModel1Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r } = params;
+    if (!E || !Kn || !r) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const n = Math.log(1 + (Kn * (q - 1)) / (E * q)) / Math.log(q);
+
+    return Number(n.toFixed(2));
+  }
+}
+
+class NModel1Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r } = params;
+    if (!E || !Kn || !r) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const n = Math.log((Kn * (q - 1)) / E + 1) / Math.log(q);
+
+    return Number(n.toFixed(2));
+  }
+}
+
+class NModel2Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r, m } = params;
+    if (!E || !Kn || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + (1 + r / m) ** m - 1;
+    const n = Math.log(1 + (Kn * (q - 1)) / (E * q)) / Math.log(q);
+
+    return Number(n.toFixed(2));
+  }
+}
+
+class NModel2Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r, m } = params;
+    if (!E || !Kn || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + (1 + r / m) ** m - 1;
+    const n = Math.log(1 + (Kn * (q - 1)) / E) / Math.log(q);
+
+    return Number(n.toFixed(2));
+  }
+}
+
+class NModel3Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r, m } = params;
+    if (!E || !Kn || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r / m;
+    const n = Math.log(1 + (Kn * (q - 1)) / (E * q)) / (m * Math.log(q));
+
+    return Number(n.toFixed(2));
+  }
+}
+
+class NModel3Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r, m } = params;
+    if (!E || !Kn || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r / m;
+    const n = Math.log(1 + (Kn * (q - 1)) / E) / (m * Math.log(q));
+
+    return Number(n.toFixed(2));
+  }
+}
+
+class NModel4Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r, m } = params;
+    if (!E || !Kn || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const n =
+      Math.log(1 + (Kn * (q - 1)) / (E * (m + ((m + 1) / 2) * r))) /
+      (m * Math.log(q));
+
+    return Number(n.toFixed(2));
+  }
+}
+
+class NModel4Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { E, Kn, r, m } = params;
+    if (!E || !Kn || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const n =
+      Math.log(1 + (Kn * (q - 1)) / (E * (m + ((m - 1) / 2) * r))) /
+      (m * Math.log(q));
+
+    return Number(n.toFixed(2));
+  }
+}
+
+// -----------
+
+class EModel1Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r } = params;
+    if (!Kn || !n || !r) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const E = (Kn * (q - 1)) / (q * (q ** n - 1));
+
+    return Number(E.toFixed(2));
+  }
+}
+
+class EModel1Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r } = params;
+    if (!Kn || !n || !r) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const E = (Kn * (q - 1)) / (q ** n - 1);
+
+    return Number(E.toFixed(2));
+  }
+}
+
+class EModel2Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r, m } = params;
+    if (!Kn || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + (1 + r / m) ** m - 1;
+    const E = (Kn * (q - 1)) / (q * (q ** n - 1));
+
+    return Number(E.toFixed(2));
+  }
+}
+
+class EModel2Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r, m } = params;
+    if (!Kn || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + (1 + r / m) ** m - 1;
+    const E = (Kn * (q - 1)) / (q ** n - 1);
+
+    return Number(E.toFixed(2));
+  }
+}
+
+class EModel3Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r, m } = params;
+    if (!Kn || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r / m;
+    const E = (Kn * (q - 1)) / (q * (q ** (n * m) - 1));
+
+    return Number(E.toFixed(2));
+  }
+}
+
+class EModel3Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r, m } = params;
+    if (!Kn || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r / m;
+    const E = (Kn * (q - 1)) / (q ** (n * m) - 1);
+
+    return Number(E.toFixed(2));
+  }
+}
+
+class EModel4Up implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r, m } = params;
+    if (!Kn || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const E = (Kn * (q - 1)) / ((m + ((m + 1) / 2) * r) * (q ** (n * m) - 1));
+
+    return Number(E.toFixed(2));
+  }
+}
+
+class EModel4Down implements OszczednosciCalculationStrategy {
+  calculate(params: OszczednosciParams) {
+    const { Kn, n, r, m } = params;
+    if (!Kn || !n || !r || !m) throw new Error("Invalid params");
+
+    const q = 1 + r;
+    const E = (Kn * (q - 1)) / ((m + ((m - 1) / 2) * r) * (q ** (n * m) - 1));
+
+    return Number(E.toFixed(2));
+  }
+}
 
 class KnCalculatorFactory {
   createStrategy(modelNumber: number, from: EFrom) {
@@ -104,17 +330,58 @@ class KnCalculatorFactory {
       case 1:
         if (from === "up") return new KnModel1Up();
         return new KnModel1Down();
+      case 2:
+        if (from === "up") return new KnModel2Up();
+        return new KnModel2Down();
+      case 3:
+        if (from === "up") return new KnModel3Up();
+        return new KnModel3Down();
+      case 4:
+        if (from === "up") return new KnModel4Up();
+        return new KnModel4Down();
 
-      //   case 2:
-      //     if (from === "up") return new KnModel2Up();
-      //     return new KnModel2Down();
-      //   case 3:
-      //     if (from === "up") return new KnModel3Up();
-      //     return new KnModel3Down();
-      //   case 4:
-      //     if (from === "up") return new KnModel4Up();
-      //     return new KnModel4Down();
+      default:
+        throw new Error("Unknow modesadsdal");
+    }
+  }
+}
 
+class NCalculatorFactory {
+  createStrategy(modelNumber: number, from: EFrom) {
+    switch (modelNumber) {
+      case 1:
+        if (from === "up") return new NModel1Up();
+        return new NModel1Down();
+      case 2:
+        if (from === "up") return new NModel2Up();
+        return new NModel2Down();
+      case 3:
+        if (from === "up") return new NModel3Up();
+        return new NModel3Down();
+      case 4:
+        if (from === "up") return new NModel4Up();
+        return new NModel4Down();
+      default:
+        throw new Error("Unknow model");
+    }
+  }
+}
+
+class ECalculatorFactory {
+  createStrategy(modelNumber: number, from: EFrom) {
+    switch (modelNumber) {
+      case 1:
+        if (from === "up") return new EModel1Up();
+        return new EModel1Down();
+      case 2:
+        if (from === "up") return new EModel2Up();
+        return new EModel2Down();
+      case 3:
+        if (from === "up") return new EModel3Up();
+        return new EModel3Down();
+      case 4:
+        if (from === "up") return new EModel4Up();
+        return new EModel4Down();
       default:
         throw new Error("Unknow model");
     }
@@ -129,20 +396,25 @@ class OszczednosciCalculator {
       case "Kn":
         this.factory = new KnCalculatorFactory();
         break;
+      case "n":
+        this.factory = new NCalculatorFactory();
+        break;
+      case "E":
+        this.factory = new ECalculatorFactory();
+        break;
+
       default:
         throw new Error("Unknow model");
     }
   }
 
   determineModel(data: OszczednosciInputs): number {
-    // Model 1 = the same frequency
-
+    console.log(data);
     const EFrequency = Number(data.EFrequency);
     const capitalization = Number(data.capitalization);
     const rRate = Number(data.rRate);
 
-    console.log(EFrequency, capitalization, rRate);
-
+    // Model 1 = the same frequency
     if (
       EFrequency === capitalization &&
       EFrequency === rRate &&
@@ -151,16 +423,13 @@ class OszczednosciCalculator {
       return 1;
 
     // Model 2 - capitalization more frequent
-
-    if (capitalization > rRate && capitalization > EFrequency) return 2;
+    if (capitalization < rRate && capitalization < EFrequency) return 2;
 
     // Model 3 - capitalization and E more frequent
-
-    if (capitalization > rRate && EFrequency > rRate) return 3;
+    if (capitalization < rRate && EFrequency < rRate) return 3;
 
     // Model 4 - E more frequent
-
-    if (EFrequency > rRate && EFrequency > capitalization) return 4;
+    if (EFrequency < rRate && EFrequency < capitalization) return 4;
 
     throw new Error("Unknow model");
   }
@@ -170,12 +439,13 @@ class OszczednosciCalculator {
       .setKn(data.Kn)
       .setN(data.n)
       .setR(data.r)
-      .setM(data.capitalization, data.rRate)
+      .setM(data.capitalization, data.rRate, data.EFrequency)
       .setE(data.E)
       .setFrom(data.from)
       .build();
 
     const modelNumber = this.determineModel(data);
+    console.log("Model Number: ", modelNumber);
 
     return this.factory
       .createStrategy(modelNumber, data.from)
@@ -197,7 +467,7 @@ class OszczednosciParamsBuilder {
   }
 
   setN(n: number | undefined): this {
-    this.params.n = n || undefined;
+    this.params.n = Number(n) || undefined;
     return this;
   }
 
@@ -207,12 +477,12 @@ class OszczednosciParamsBuilder {
   }
 
   setE(E: number | undefined): this {
-    this.params.E = E || undefined;
+    this.params.E = Number(E) || undefined;
     return this;
   }
 
-  setM(capitalization: timePeriod, rRate: timePeriod): this {
-    this.params.m = this.calculateM(capitalization, rRate);
+  setM(capitalization: number, rRate: number, EFrequency: number): this {
+    this.params.m = this.calculateM(capitalization, rRate, EFrequency);
     return this;
   }
 
@@ -220,20 +490,28 @@ class OszczednosciParamsBuilder {
     return this.params as OszczednosciParams;
   }
 
-  private calculateM(capitalization: timePeriod, rRate: timePeriod): number {
-    if (capitalization === rRate) return 1;
-    if (rRate === "yearly") {
-      if (capitalization === "halfYearly") return 2;
-      if (capitalization === "quarterly") return 4;
-      if (capitalization === "monthly") return 12;
+  private calculateM(
+    capitalization: number,
+    rRate: number,
+    EFrequency: number
+  ): number {
+    if (capitalization === rRate && capitalization != EFrequency) return 12;
+
+    if (rRate === timePeriodsEnum.yearly) {
+      if (capitalization === timePeriodsEnum.halfYearly) return 2;
+      if (capitalization === timePeriodsEnum.quarterly) return 4;
+      if (capitalization === timePeriodsEnum.monthly) return 12;
     }
-    if (rRate === "halfYearly") {
-      if (capitalization === "quarterly") return 2;
-      if (capitalization === "monthly") return 6;
+
+    if (rRate === timePeriodsEnum.halfYearly) {
+      if (capitalization === timePeriodsEnum.quarterly) return 2;
+      if (capitalization === timePeriodsEnum.monthly) return 6;
     }
-    if (rRate === "quarterly") {
-      if (capitalization === "monthly") return 3;
+
+    if (rRate === timePeriodsEnum.quarterly) {
+      if (capitalization === timePeriodsEnum.monthly) return 3;
     }
+
     return 1;
   }
 }

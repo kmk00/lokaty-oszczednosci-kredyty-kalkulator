@@ -28,6 +28,7 @@ const OszczednosciForm = ({
   const onSubmit = (data: OszczednosciInputs) => {
     if (option === undefined) return;
 
+    console.log(data);
     const answer = calculateOszczednosci(option, data);
     setAnswer(answer);
   };
@@ -76,7 +77,7 @@ const OszczednosciForm = ({
       {option !== "E" && (
         <div>
           <label htmlFor="E" className="text-sm">
-            Stopa procentowa - wartość
+            Wartość wpłat
           </label>
           <input
             id="E"
