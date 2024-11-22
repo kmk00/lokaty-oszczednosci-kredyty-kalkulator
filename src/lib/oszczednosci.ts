@@ -24,7 +24,7 @@ interface OszczednosciParams {
   r?: number;
   m?: number;
   E?: number;
-  from: EFrom;
+  from?: EFrom;
 }
 
 class KnModel1Up implements OszczednosciCalculationStrategy {
@@ -529,4 +529,28 @@ export {
   KnCalculatorFactory,
   OszczednosciCalculator,
   OszczednosciParamsBuilder,
+  KnModel1Down,
+  KnModel1Up,
+  KnModel2Down,
+  KnModel2Up,
+  KnModel3Down,
+  KnModel3Up,
+  KnModel4Down,
+  KnModel4Up,
+  NModel1Down,
+  NModel1Up,
+  NModel2Down,
+  NModel2Up,
+  NModel3Down,
+  NModel3Up,
+  NModel4Down,
+  NModel4Up,
+  EModel1Down,
+  EModel1Up,
+  EModel2Down,
+  EModel2Up,
+  EModel3Down,
+  EModel3Up,
+  EModel4Up,
+  EModel4Down,
 };
