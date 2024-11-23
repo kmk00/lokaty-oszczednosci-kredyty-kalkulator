@@ -206,7 +206,7 @@ class NModel4Up implements OszczednosciCalculationStrategy {
     const q = 1 + r;
     const n =
       Math.log(1 + (Kn * (q - 1)) / (E * (m + ((m + 1) / 2) * r))) /
-      (m * Math.log(q));
+      Math.log(q);
 
     return Number(n.toFixed(2));
   }
@@ -220,7 +220,7 @@ class NModel4Down implements OszczednosciCalculationStrategy {
     const q = 1 + r;
     const n =
       Math.log(1 + (Kn * (q - 1)) / (E * (m + ((m - 1) / 2) * r))) /
-      (m * Math.log(q));
+      Math.log(q);
 
     return Number(n.toFixed(2));
   }
