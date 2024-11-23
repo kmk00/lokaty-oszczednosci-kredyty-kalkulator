@@ -306,7 +306,7 @@ class EModel4Up implements OszczednosciCalculationStrategy {
     if (!Kn || !n || !r || !m) throw new Error("Invalid params");
 
     const q = 1 + r;
-    const E = (Kn * (q - 1)) / ((m + ((m + 1) / 2) * r) * (q ** (n * m) - 1));
+    const E = (Kn * (q - 1)) / ((m + ((m + 1) / 2) * r) * (q ** n - 1));
 
     return Number(E.toFixed(2));
   }
@@ -318,7 +318,7 @@ class EModel4Down implements OszczednosciCalculationStrategy {
     if (!Kn || !n || !r || !m) throw new Error("Invalid params");
 
     const q = 1 + r;
-    const E = (Kn * (q - 1)) / ((m + ((m - 1) / 2) * r) * (q ** (n * m) - 1));
+    const E = (Kn * (q - 1)) / ((m + ((m - 1) / 2) * r) * (q ** n - 1));
 
     return Number(E.toFixed(2));
   }
