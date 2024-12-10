@@ -2,6 +2,11 @@
 
 export type LokatyOptions = "Kn" | "K0" | "n" | "r";
 
+export type OszczednosciOptions = "Kn" | "n" | "r" | "E";
+
+export type EFrom = "up" | "down";
+export type timePeriod = "monthly" | "quarterly" | "halfYearly" | "yearly";
+
 export interface LokatyInputs {
   r: number | undefined;
   Kn: number | undefined;
@@ -11,7 +16,23 @@ export interface LokatyInputs {
   rRate: timePeriod;
 }
 
-export type timePeriod = "monthly" | "quarterly" | "halfYearly" | "yearly";
+enum timePeriodsEnum {
+  monthly,
+  quarterly,
+  halfYearly,
+  yearly,
+}
+
+export interface OszczednosciInputs {
+  r: number | undefined;
+  Kn: number | undefined;
+  n: number | undefined;
+  E: number | undefined;
+  rRate: number;
+  capitalization: number;
+  EFrequency: number;
+  from: "up" | "down";
+}
 
 export interface ModelsAnswers {
   m1: number;
